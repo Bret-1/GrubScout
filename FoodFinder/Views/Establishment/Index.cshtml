@@ -1,0 +1,31 @@
+﻿@model FoodFinder.Models.Establishment
+@{
+}
+
+@{
+    double rating = Model.Rating; // example: 3.5
+    int fullStars = (int)Math.Floor(rating);
+    bool hasHalfStar = (rating - fullStars) >= 0.5;
+    int emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+}
+
+<div class="row-cols-3">
+    <h3>@Model.Name</h3>
+    <!--<a href="https://www.flaticon.com/free-icons/star" title="star icons">Star icons created by alkhalifi design - Flaticon</a>-->
+    <div class="rating">
+        @for (int i = 0; i < fullStars; i++)
+        {
+            <span class="star full">★</span>
+            <img src="Assets/star.png" width="32" height="32"/>
+        }
+        @if (hasHalfStar)
+        {
+            <span class="star half">☆</span>
+        }
+        @for (int i = 0; i < emptyStars; i++)
+        {
+            <span class="star empty">☆</span>
+        }
+    </div>
+</div>
+<p>@Model.Description</p>

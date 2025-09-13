@@ -1,0 +1,38 @@
+﻿@model FoodFinder.Models.EstablishmentList
+
+@{
+    if (EstablishmentList.establishments == null)
+    {
+        EstablishmentList.establishments = new List<Establishment>();
+    }
+}
+<form asp-controller="EstablishmentList" asp-action="Index" method="post" class="mb-4">
+    <div class="row align-items-end g-3">
+        <!-- Sort By -->
+        <div class="col-md-4">
+            <label class="form-label" for="sort-by">Sort By</label>
+            <select class="form-select" asp-items="Model.SortBySelectList" asp-for="SelectedSortBy">
+                <option value="NOSELECTEDVALUE">Sort By...</option>
+            </select>
+        </div>
+
+        <!-- Open Now -->
+        <div class="col-md-3 d-flex align-items-center">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="open-now" name="open-now">
+                <label class="form-check-label" for="open-now">Open Now</label>
+            </div>
+        </div>
+
+        <!-- Submit -->
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Filter</button>
+        </div>
+    </div>
+</form>
+
+@foreach (Establishment establishment in EstablishmentList.establishments)
+{
+    <partial name="_EstablishmentPartial" model="establishment" />
+}
+

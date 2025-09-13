@@ -1,0 +1,89 @@
+﻿@model FoodFinder.Models.Establishment
+@using Newtonsoft.Json.Linq
+
+@{
+    double rating = Model.Rating;
+    int fullStars = (int)Math.Floor(rating);
+    bool hasHalfStar = (rating - fullStars) >= 0.5;
+    int emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+    string queryAddress = "https://www.google.com/maps/search/?api=1&query=" + Model.Address.Replace(" ", "+");
+
+    string apiKey = FoodFinder.Controllers.EstablishmentListController.getPlacesAPIKey();
+}
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <div class="row align-items-center mb-2">
+            <div class="col-md-6">
+                <h3 class="card-title mb-1">@Model.Name</h3>
+                <a href="@queryAddress" target="_blank" class="text-muted">
+                    <i class="bi bi-geo-alt-fill me-1"></i>@Model.Address
+                </a>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <span class="badge bg-primary fs-6">@Model.Rating.ToString("0.0")</span>
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <div class="col-auto">
+                @for (int i = 0; i < fullStars; i++)
+                {
+                    <span class="text-warning fs-5">★</span>
+                }
+                @if (hasHalfStar)
+                {
+                    <span class="text-warning fs-5">☆</span>
+                }
+                @for (int i = 0; i < emptyStars; i++)
+                {
+                    <span class="text-secondary fs-5">☆</span>
+                }
+            </div>
+
+            <div class="col-auto">
+                @if (Model.PriceLevel == 1)
+                {
+                    <span class="badge bg-success">$</span>
+                }
+                else if (Model.PriceLevel == 2)
+                {
+                    <span class="badge bg-warning">$$</span>
+                }
+                else if (Model.PriceLevel == 3)
+                {
+                    <span class="badge bg-danger">$$$</span>
+                }
+                else
+                {
+                    <span class="badge bg-secondary">$?</span>
+                }
+            </div>
+            <div class="col-auto">
+                @if (Model.OpenNow)
+                {
+                    <span class="badge bg-success">Open Now</span>
+                }
+                else
+                {
+                    <span class="badge bg-danger">Closed Now</span>
+                }
+            </div>
+        </div>
+
+        <p class="card-text">@Model.Description</p>
+
+        <!-- Distances & Times -->
+        <div class="row mt-3 text-muted">
+            <div class="col-md-6">
+                <i class="bi bi-walk me-1"></i>
+                Walking: @Model.WalkingDistance (@Model.WalkingTime)
+            </div>
+            <div class="col-md-6">
+                <i class="bi bi-car-front me-1"></i>
+                Driving: @Model.DrivingDistance (@Model.DrivingTime)
+            </div>
+        </div>
+    </div>
+</div>
+
